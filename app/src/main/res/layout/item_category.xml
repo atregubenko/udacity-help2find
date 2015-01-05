@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/category_list_item_height"
+    android:background="@color/white"
+    android:layout_margin="10dp">
+
+    <ImageView
+        android:layout_width="@dimen/category_list_item_height"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/item_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/details_placeholder"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/itemt_lost_hint"
+        android:textSize="10sp"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_alignTop="@+id/item_is_lost"
+        android:layout_alignRight="@+id/item_image"
+        android:layout_alignBottom="@+id/item_is_lost"
+        android:layout_alignLeft="@+id/item_image" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_is_lost"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/list_lost_marker"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/item_image"
+        android:layout_marginTop="@dimen/category_item_top_margin"
+        android:layout_marginBottom="@dimen/category_item_bottom_margin"
+        android:layout_marginLeft="@dimen/category_item_left_margin"
+        android:layout_centerVertical="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/main_color"
+            android:text="Announcement's title"
+            android:id="@+id/item_title"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Announcement's description"
+            android:id="@+id/item_description"/>
+    </LinearLayout>
+
+</RelativeLayout>

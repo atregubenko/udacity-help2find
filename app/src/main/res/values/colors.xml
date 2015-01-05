@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffffff</color>
+    <color name="overlay">#881FBFB3</color>
+    <color name="pull_progress_color">#ff1fc6c7</color>
+    <color name="main_color">#ff1FBFB3</color>
+    <color name="category_background">#ffeeeeee</color>
+
+    <color name="edit_text_color">#ff888888</color>
+    <color name="edit_text_hint_color">#ffcecece</color>
+    <color name="found_color">#ffff8000</color>
+
+    <color name="lost_color_overlay">#801FBFB3</color>
+    <color name="found_color_overlay">#80ff8000</color>
+</resources>

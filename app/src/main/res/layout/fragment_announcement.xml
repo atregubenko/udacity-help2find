@@ -1,0 +1,90 @@
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:fillViewport="true"
+    tools:context="udacity.gdg.help2find.fragments.AnnouncementFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/category_background">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/top_container"
+            android:background="@color/white"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/announcement_image_horizontal_margin"
+            android:layout_marginRight="@dimen/announcement_image_horizontal_margin">
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/announcement_image_height"
+                android:id="@+id/announcement_image_scroll"
+                android:fillViewport="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/announcement_image_height"
+                    android:orientation="horizontal"
+                    android:id="@+id/image_container">
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:id="@+id/lost_hint"
+                android:textColor="@color/white"
+                android:layout_alignBottom="@+id/is_lost"
+                android:layout_alignTop="@+id/is_lost"
+                android:gravity="center"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/is_lost"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/announcement_info"
+                android:layout_below="@+id/announcement_image_scroll"
+                android:padding="5dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:id="@+id/announcement_address"
+                android:layout_below="@+id/announcement_info"
+                android:padding="5dp"/>
+
+        </RelativeLayout>
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_margin="15dp"
+            android:layout_below="@+id/top_container" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:id="@+id/map_overlay"
+            android:layout_below="@+id/top_container"/>
+
+    </RelativeLayout>
+
+</ScrollView>

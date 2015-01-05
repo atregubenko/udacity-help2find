@@ -1,0 +1,16 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="category_list_item_height">100dp</dimen>
+    <dimen name="category_item_top_margin">5dp</dimen>
+    <dimen name="category_item_bottom_margin">5dp</dimen>
+    <dimen name="category_item_left_margin">5dp</dimen>
+    <dimen name="preview_image_size">100dp</dimen>
+
+    <!--Announcement-->
+    <dimen name="announcement_image_height">200dp</dimen>
+    <dimen name="announcement_image_horizontal_margin">15dp</dimen>
+    <dimen name="announcement_image_divider_width">3dp</dimen>
+</resources>

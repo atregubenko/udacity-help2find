@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "udacity.gdg.help2find"
+        minSdkVersion 10
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../keystore/borannushka")
+            storePassword "123123123"
+            keyAlias "borannushka"
+            keyPassword "123123123"
+        }
+        debug {
+            storeFile file("../keystore/borannushka")
+            storePassword "123123123"
+            keyAlias "borannushka"
+            keyPassword "123123123"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:+'
+    compile 'com.google.android.gms:play-services:+'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+}

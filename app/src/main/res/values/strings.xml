@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Help2Find</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_share">Share</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_detail">DetailActivity</string>
+
+    <!--Announcement-->
+    <string name="announcement_lost">The item is lost</string>
+    <string name="announcement_found">The item is found</string>
+
+    <!-- Category -->
+    <string name="category_lost">lost</string>
+    <string name="category_found">found</string>
+
+</resources>
