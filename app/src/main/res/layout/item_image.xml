@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="600dp"
     android:layout_height="@dimen/announcement_image_height"
-    android:background="@android:color/black">
+    android:background="@color/white">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

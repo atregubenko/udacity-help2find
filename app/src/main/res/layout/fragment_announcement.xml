@@ -21,6 +21,11 @@
             android:layout_marginLeft="@dimen/announcement_image_horizontal_margin"
             android:layout_marginRight="@dimen/announcement_image_horizontal_margin">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/announcement_image_height"
+                android:src="@drawable/details_placeholder"/>
+
             <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/announcement_image_height"

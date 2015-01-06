@@ -44,7 +44,7 @@ public class CategoryCursorAdapter extends CursorAdapter implements Filterable {
         vh.title.setText(title);
         vh.description.setText(cursor.getString(cursor.getColumnIndex(AnnouncementEntry.ANNOUNCEMENT_DESCRIPTION)));
         String imageUrl = cursor.getString(cursor.getColumnIndex(AnnouncementEntry.ANNOUNCEMENT_PREVIEW_IMAGE));
-        HelpApp.displayImage(imageUrl, vh.image, R.drawable.details_placeholder);
+        HelpApp.displayImage(imageUrl, vh.image, R.drawable.ic_category_placeholder);
         cursor.getColumnIndex(AnnouncementEntry.ANNOUNCEMENT_TITLE);
         boolean isLost = cursor.getInt(cursor.getColumnIndex(AnnouncementEntry.ANNOUNCEMENT_IS_LOST)) > 0;
         if (isLost) {
