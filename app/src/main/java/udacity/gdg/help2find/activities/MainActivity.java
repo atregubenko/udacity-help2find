@@ -14,6 +14,7 @@ import udacity.gdg.help2find.R;
 import udacity.gdg.help2find.fragments.AnnouncementFragment;
 import udacity.gdg.help2find.fragments.CategoryListFragment;
 import udacity.gdg.help2find.fragments.NavigationDrawerFragment;
+import udacity.gdg.help2find.sync.HelpFindSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements CategoryListFragment.OnCategoryItemSelectedListener,
@@ -36,6 +37,10 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        HelpFindSyncAdapter.initializeSyncAdapter(this);
+//        todo
+        HelpFindSyncAdapter.syncImmediately(this);
     }
 //
 

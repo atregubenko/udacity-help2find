@@ -18,4 +18,8 @@
     <string name="category_lost">lost</string>
     <string name="category_found">found</string>
 
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">help2find.example.com</string>
+    <string name="content_authority">udacity.gdg.help2find</string>
+
 </resources>
