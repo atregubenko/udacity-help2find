@@ -40,10 +40,6 @@ public class HelpFindProvider extends ContentProvider {
             AnnouncementEntry.TABLE_NAME+
                     "." + AnnouncementEntry.ANNOUNCEMENT_CATEGORY + " = ? ";
 
-    private String sAnnouncementIdSelection =
-            AnnouncementEntry.TABLE_NAME+
-                    "." + AnnouncementEntry.ANNOUNCEMENT_ID + " = ? ";
-
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 

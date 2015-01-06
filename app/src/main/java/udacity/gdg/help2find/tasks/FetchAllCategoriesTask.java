@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Vector;
 
 import udacity.gdg.help2find.activities.SplashActivity;
-import udacity.gdg.help2find.database.HelpFindContract;
 import udacity.gdg.help2find.database.HelpFindContract.CategoryEntry;
 import udacity.gdg.help2find.entities.Category;
 import udacity.gdg.help2find.utils.JsonUtils;
@@ -36,7 +35,6 @@ public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
 
     private static final String ALL_CATEGORIES_URL = "http://helpme2findit.herokuapp.com:80/api/categories.json";
     private static final String TAG = FetchAllCategoriesTask.class.getSimpleName();
-    private final String LOG_TAG = FetchAllCategoriesTask.class.getSimpleName();
     private final Context mContext;
     private final SplashActivity mActivity;
     private static final int DELAY_IN_SECONDS = 2;
@@ -78,7 +76,7 @@ public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
             }
             jsonStr = buffer.toString();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
+            Log.e(TAG, "Error ", e);
             return null;
         } finally {
             if (urlConnection != null) {
@@ -88,7 +86,7 @@ public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                    Log.e(TAG, "Error closing stream", e);
                 }
             }
         }
@@ -96,7 +94,7 @@ public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
         try {
             getDataFromJson(jsonStr);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             e.printStackTrace();
         }
         return null;

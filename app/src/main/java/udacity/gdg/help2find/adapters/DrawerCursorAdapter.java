@@ -38,7 +38,6 @@ public class DrawerCursorAdapter extends CursorAdapter {
         String title = cursor.getString(cursor.getColumnIndex(CategoryEntry.CATEGORY_NAME));
         vh.title.setText(title);
         vh.image.setImageResource(vh.getDefaultImageResByCategoryId(cursor.getInt(cursor.getColumnIndex(CategoryEntry.CATEGORY_ID))));
-        String imageUrl = cursor.getString(cursor.getColumnIndex(CategoryEntry.CATEGORY_PHOTO));
     }
 
     private static class ViewHolder {

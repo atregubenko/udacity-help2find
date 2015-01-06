@@ -2,13 +2,8 @@ package udacity.gdg.help2find.database;
 
 import android.database.Cursor;
 
-import java.util.Date;
-
-import udacity.gdg.help2find.entities.Announcement;
-
 import udacity.gdg.help2find.database.HelpFindContract.AnnouncementEntry;
-import udacity.gdg.help2find.database.HelpFindContract.ImageEntry;
-import udacity.gdg.help2find.database.HelpFindContract.CategoryEntry;
+import udacity.gdg.help2find.entities.Announcement;
 
 /**
  * Created by nnet on 05.01.15.

@@ -37,7 +37,6 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
 
     private static final String ANNOUNCEMENTS_BY_CATEGORY_URL = "http://helpme2findit.herokuapp.com:80/api/announcements/category/%d.json";
     private static final String TAG = FetchAnnouncementsByCategoryTask.class.getSimpleName();
-    private final String LOG_TAG = FetchAnnouncementsByCategoryTask.class.getSimpleName();
     private final Context mContext;
     private final long mCategoryId;
 
@@ -78,7 +77,7 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
             }
             jsonStr = buffer.toString();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
+            Log.e(TAG, "Error ", e);
             return null;
         } finally {
             if (urlConnection != null) {
@@ -88,7 +87,7 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                    Log.e(TAG, "Error closing stream", e);
                 }
             }
         }
@@ -96,7 +95,7 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
         try {
             getDataFromJson(jsonStr);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            Log.e(TAG, e.getMessage(), e);
             e.printStackTrace();
         }
         return null;
