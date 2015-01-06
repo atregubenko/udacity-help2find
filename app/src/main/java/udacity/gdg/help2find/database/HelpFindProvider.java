@@ -33,14 +33,6 @@ public class HelpFindProvider extends ContentProvider {
         sQueryBuilder = new SQLiteQueryBuilder();
         sQueryBuilder.setTables(
                 HelpFindContract.AnnouncementEntry.TABLE_NAME
-//                        + " INNER JOIN " +
-//                        HelpFindContract.ImageEntry.TABLE_NAME +
-//                        " ON "
-//                        + HelpFindContract.ImageEntry.TABLE_NAME +
-//                        "." + HelpFindContract.ImageEntry.IMAGE_ANNOUNCEMENT_ID +
-//                        " = "
-//                        + HelpFindContract.AnnouncementEntry.TABLE_NAME +
-//                        "." + HelpFindContract.AnnouncementEntry.ANNOUNCEMENT_ID
         );
     }
 
@@ -245,7 +237,6 @@ public class HelpFindProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        // Because a null deletes all rows
         if (selection == null || rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -352,16 +343,4 @@ public class HelpFindProvider extends ContentProvider {
         );
     }
 
-    private Cursor getAnnouncementWithImagesById(
-            Uri uri, String[] projection, String sortOrder) {
-
-        return sQueryBuilder.query(mOpenHelper.getReadableDatabase(),
-                projection,
-                sAnnouncementIdSelection,
-                new String[]{AnnouncementEntry.ANNOUNCEMENT_ID + " = '" + ContentUris.parseId(uri) + "'"},
-                null,
-                null,
-                sortOrder
-        );
-    }
 }

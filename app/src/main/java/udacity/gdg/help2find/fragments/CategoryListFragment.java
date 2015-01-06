@@ -129,15 +129,13 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrder = AnnouncementEntry.ANNOUNCEMENT_CREATED_AT + " DESC";
-
         return new CursorLoader(
                 getActivity(),
                 AnnouncementEntry.buildAnnouncementByCategory(mCategoryId),
                 null,
                 null,
                 null,
-                sortOrder
+                null
         );
     }
 

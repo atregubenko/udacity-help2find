@@ -1,15 +1,12 @@
 package udacity.gdg.help2find.database;
 
 import android.content.ContentUris;
-import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import udacity.gdg.help2find.entities.Announcement;
 
 /**
  * Created by nnet on 30.12.14.
@@ -80,19 +77,6 @@ public class HelpFindContract {
                     .appendPath(String.valueOf(categoryId)).build();
         }
 
-        public static Uri buildAnnouncementWithImagesById(long announcementId) {
-            return CONTENT_URI.buildUpon()
-                    .appendPath(String.valueOf(announcementId))
-                    .build();
-        }
-
-        public static Uri buildAnnouncementByCategoryOrderBy(long categoryId) {
-            return CONTENT_URI.buildUpon()
-                    .appendQueryParameter(ANNOUNCEMENT_CATEGORY, String.valueOf(categoryId))
-                    .build();
-        }
-
-
         public static String getCategoryFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }
@@ -116,10 +100,6 @@ public class HelpFindContract {
 
         public static Uri buildImageUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
-
-        public static Uri buildImageWithAnnouncementId(long announcementId) {
-            return CONTENT_URI.buildUpon().appendPath(String.valueOf(announcementId)).build();
         }
 
     }

@@ -21,7 +21,6 @@ public class CategoryCursorAdapter extends CursorAdapter implements Filterable {
     private static final String TAG = CategoryCursorAdapter.class.getSimpleName();
     private final Context mContext;
     private final long mCategoryId;
-    private String orderCondition;
 
     public CategoryCursorAdapter(Context context, Cursor c, int flags, long categoryId) {
         super(context, c, flags);
@@ -76,11 +75,4 @@ public class CategoryCursorAdapter extends CursorAdapter implements Filterable {
 
     }
 
-    public String getOrderCondition() {
-        return orderCondition;
-    }
-
-    public void setOrderCondition(String orderCondition) {
-        this.orderCondition = orderCondition;
-    }
 }

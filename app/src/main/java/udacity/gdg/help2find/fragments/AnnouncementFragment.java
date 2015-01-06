@@ -236,6 +236,9 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
                     holder.leftArrow.setVisibility(View.VISIBLE);
                     holder.rightArrow.setVisibility(View.VISIBLE);
                 }
+            } else {
+                holder.leftArrow.setVisibility(View.INVISIBLE);
+                holder.rightArrow.setVisibility(View.INVISIBLE);
             }
             holder.leftArrow.setOnClickListener(leftClickListener);
             holder.rightArrow.setOnClickListener(rightClickListener);
