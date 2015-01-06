@@ -32,11 +32,6 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
 
         if (findViewById(R.id.fragment_category) != null) {
             mTwoPane = true;
-            if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_category, new CategoryListFragment())
-                        .commit();
-            }
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, BlankFragment.newInstance())
                     .commit();
@@ -44,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
             mTwoPane = false;
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.container, CategoryListFragment.newInstance(mCategoryId))
+                        .replace(R.id.container, CategoryListFragment.newInstance(mCategoryId))
                         .commit();
                 HelpFindSyncAdapter.syncImmediately(this);
             }
@@ -53,9 +48,7 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mNavigationDrawerFragment.init(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.init(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
     }
 

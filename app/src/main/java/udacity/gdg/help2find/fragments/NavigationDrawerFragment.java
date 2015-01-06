@@ -38,7 +38,7 @@ public class NavigationDrawerFragment extends Fragment{
     private ListView mDrawerListView;
     private View mContainer;
 
-    private int mSelectedPosition = 0;
+    private int mSelectedPosition = 1;
     private DrawerCursorAdapter mAdapter;
 
     public NavigationDrawerFragment() {
@@ -80,7 +80,7 @@ public class NavigationDrawerFragment extends Fragment{
                 null);
         mAdapter = new DrawerCursorAdapter(getActivity(), cursor, 0);
         mDrawerListView.setAdapter(mAdapter);
-        mDrawerListView.setItemChecked(mSelectedPosition, true);
+        selectItem(mSelectedPosition);
         return mDrawerListView;
     }
 
@@ -120,7 +120,9 @@ public class NavigationDrawerFragment extends Fragment{
                 getActivity().supportInvalidateOptionsMenu();
             }
         };
-        if (mSelectedPosition == 0) {
+        if (mSelectedPosition != -1) {
+            selectItem(mSelectedPosition);
+        } else {
             mDrawerLayout.openDrawer(mContainer);
         }
         mDrawerLayout.post(new Runnable() {
@@ -147,6 +149,8 @@ public class NavigationDrawerFragment extends Fragment{
         if (mCallbacks != null && mAdapter != null) {
             Cursor cursor = mAdapter.getCursor();
             cursor.moveToPosition(position);
+            String title = cursor.getString(cursor.getColumnIndex(HelpFindContract.CategoryEntry.CATEGORY_NAME));
+            ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(title);
             mCallbacks.onCategorySelected(cursor.getLong(cursor.getColumnIndex(HelpFindContract.CategoryEntry.CATEGORY_ID)));
         }
     }

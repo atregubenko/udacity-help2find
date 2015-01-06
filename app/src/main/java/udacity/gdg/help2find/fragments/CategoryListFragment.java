@@ -23,6 +23,7 @@ import udacity.gdg.help2find.tasks.FetchAnnouncementsByCategoryTask;
 public class CategoryListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     protected static final String ARG_CATEGORY_ID = "category_id";
+    private static final String CURRENT_POSITION_KEY = "current_position_key";
     private OnCategoryItemSelectedListener mListener;
     private ListView mListView;
     private CategoryCursorAdapter mCategoryAdapter;
@@ -58,6 +59,9 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
         if (mCategoryId > 0) {
             initListView();
         }
+        if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_POSITION_KEY)) {
+            mPosition = savedInstanceState.getInt(CURRENT_POSITION_KEY);
+        }
         setHasOptionsMenu(true);
         return view;
     }
@@ -79,14 +83,18 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-                Cursor cursor = mCategoryAdapter.getCursor();
-                if (cursor != null && cursor.moveToPosition(position)) {
-                    ((OnCategoryItemSelectedListener) getActivity())
-                            .onCategoryItemSelected(cursor.getLong(cursor.getColumnIndex(AnnouncementEntry.ANNOUNCEMENT_ID)));
-                }
-                mPosition = position;
+                selectItem(position);
             }
         });
+    }
+
+    private void selectItem(int position) {
+        Cursor cursor = mCategoryAdapter.getCursor();
+        if (cursor != null && cursor.moveToPosition(position)) {
+            ((OnCategoryItemSelectedListener) getActivity())
+                    .onCategoryItemSelected(cursor.getLong(cursor.getColumnIndex(AnnouncementEntry.ANNOUNCEMENT_ID)));
+        }
+        mPosition = position;
     }
 
     @Override
@@ -128,6 +136,14 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(CURRENT_POSITION_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 getActivity(),
@@ -143,9 +159,6 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (mCategoryAdapter != null) {
             mCategoryAdapter.swapCursor(data);
-            if (mPosition != ListView.INVALID_POSITION) {
-                mListView.smoothScrollToPosition(mPosition);
-            }
         }
     }
 

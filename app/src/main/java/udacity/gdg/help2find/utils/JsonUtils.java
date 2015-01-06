@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- * Created by nnet on 28/12/14.
+ * Created by nnet on 28.12.14.
  */
 public class JsonUtils {
     private static final String TAG = JsonUtils.class.getSimpleName();
