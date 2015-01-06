@@ -86,7 +86,7 @@ public class HelpApp extends Application {
 
         try {
             File file =  new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), "share_image" + ".png");
+                    Environment.DIRECTORY_DOWNLOADS), "share_image.png");
             file.getParentFile().mkdirs();
 
             InputStream in = new FileInputStream(src);
