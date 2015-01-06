@@ -55,7 +55,14 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         mListView = (ListView) view.findViewById(R.id.listView);
+        if (mCategoryId > 0) {
+            initListView();
+        }
+        setHasOptionsMenu(true);
+        return view;
+    }
 
+    private void initListView() {
         Cursor cursor = getActivity().getContentResolver().query(
                 AnnouncementEntry.buildAnnouncementByCategory(mCategoryId), null, null, null, null);
 
@@ -80,10 +87,6 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
                 mPosition = position;
             }
         });
-
-
-        setHasOptionsMenu(true);
-        return view;
     }
 
     @Override
@@ -140,19 +143,27 @@ public class CategoryListFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCategoryAdapter.swapCursor(data);
-        if (mPosition != ListView.INVALID_POSITION) {
-            mListView.smoothScrollToPosition(mPosition);
+        if (mCategoryAdapter != null) {
+            mCategoryAdapter.swapCursor(data);
+            if (mPosition != ListView.INVALID_POSITION) {
+                mListView.smoothScrollToPosition(mPosition);
+            }
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCategoryAdapter.swapCursor(null);
+        if (mCategoryAdapter != null) {
+            mCategoryAdapter.swapCursor(null);
+        }
     }
 
     public interface OnCategoryItemSelectedListener {
         public void onCategoryItemSelected(long announcementId);
     }
 
+    public void setCategoryId(long mCategoryId) {
+        this.mCategoryId = mCategoryId;
+        initListView();
+    }
 }

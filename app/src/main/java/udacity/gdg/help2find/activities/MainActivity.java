@@ -6,32 +6,51 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import udacity.gdg.help2find.R;
 import udacity.gdg.help2find.fragments.AnnouncementFragment;
+import udacity.gdg.help2find.fragments.BlankFragment;
 import udacity.gdg.help2find.fragments.CategoryListFragment;
 import udacity.gdg.help2find.fragments.NavigationDrawerFragment;
 import udacity.gdg.help2find.sync.HelpFindSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements CategoryListFragment.OnCategoryItemSelectedListener,
-        AnnouncementFragment.OnFragmentInteractionListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
+        NavigationDrawerFragment.NavigationDrawerCallbacks {
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private boolean mTwoPane;
+    private long mCategoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        TODO
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container, CategoryFragment.newInstance(3))
-//                    .commit();
-//        }
+        HelpFindSyncAdapter.initializeSyncAdapter(this);
+        HelpFindSyncAdapter.syncImmediately(this);
+
+        if (findViewById(R.id.fragment_category) != null) {
+            mTwoPane = true;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_category, new CategoryListFragment())
+                        .commit();
+            }
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, BlankFragment.newInstance())
+                    .commit();
+        } else {
+            mTwoPane = false;
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container, CategoryListFragment.newInstance(mCategoryId))
+                        .commit();
+                HelpFindSyncAdapter.syncImmediately(this);
+            }
+        }
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -39,9 +58,6 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        HelpFindSyncAdapter.initializeSyncAdapter(this);
-//        todo
-        HelpFindSyncAdapter.syncImmediately(this);
     }
 //
 
@@ -66,36 +82,33 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
 
     @Override
     public void onCategoryItemSelected(long announcementId) {
-//        if (mTwoPane) {
-//            // In two-pane mode, show the detail view in this activity by
-//            // adding or replacing the detail fragment using a
-//            // fragment transaction.
-//            Bundle args = new Bundle();
-//            args.putString(DetailActivity.DATE_KEY, date);
-//
-//            DetailFragment fragment = new DetailFragment();
-//            fragment.setArguments(args);
-//
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.weather_detail_container, fragment)
-//                    .commit();
-//        } else {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putLong(DetailActivity.ANNOUNCEMENT_ID, announcementId);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, AnnouncementFragment.newInstance(announcementId))
+                    .commit();
+        } else {
             Intent intent = new Intent(this, DetailActivity.class)
                     .putExtra(DetailActivity.ANNOUNCEMENT_ID, announcementId);
             startActivity(intent);
-//        }
+        }
     }
 
     @Override
     public void onCategorySelected(long categoryId) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.container, CategoryListFragment.newInstance(categoryId));
-        ft.commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
+        if (mTwoPane) {
+            CategoryListFragment fragmentById = (CategoryListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_category);
+            fragmentById.setCategoryId(categoryId);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, BlankFragment.newInstance())
+                    .commit();
+        } else {
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.container, CategoryListFragment.newInstance(categoryId));
+            ft.commit();
+        }
     }
 }

@@ -9,7 +9,6 @@ import udacity.gdg.help2find.tasks.FetchAllCategoriesTask;
 
 public class SplashActivity extends FragmentActivity {
     private static final String TAG = SplashActivity.class.getSimpleName();
-    private static final int DELAY_IN_SECONDS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

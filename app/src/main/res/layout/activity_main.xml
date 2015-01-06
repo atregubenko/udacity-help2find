@@ -15,7 +15,8 @@
     <fragment android:id="@+id/navigation_drawer"
         android:layout_width="200dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start" android:name="udacity.gdg.help2find.fragments.NavigationDrawerFragment"
+        android:layout_gravity="start"
+        android:name="udacity.gdg.help2find.fragments.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

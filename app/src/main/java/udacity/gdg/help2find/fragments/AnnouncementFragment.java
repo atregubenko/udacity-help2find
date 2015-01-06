@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -57,7 +59,6 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
     private static final int DETAIL_LOADER = 0;
     private static final String ARG_ANNOUNCEMENT_ID = "announcement_id";
     public static final String HELP2_FIND_HASH_TAG = "#Help2Find";
-    private OnFragmentInteractionListener mListener;
     private int imageWidth;
     private static View view;
     private GoogleMap googleMap;
@@ -66,7 +67,7 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
     private HorizontalScrollView imageScroll;
     private LinearLayout imageContainer;
     private LayoutInflater inflater;
-    private DetailActivity activity;
+    private ActionBarActivity activity;
     private TextView mAddress;
     private int mActiveFeature;
     private List<Image> mItems;
@@ -187,9 +188,8 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activity = (DetailActivity) getActivity();
+        activity = (ActionBarActivity) getActivity();
         inflater = LayoutInflater.from(activity);
-        imageWidth = getResources().getDisplayMetrics().widthPixels - 2 * getResources().getDimensionPixelSize(R.dimen.announcement_image_horizontal_margin);
     }
 
     private void initImageScrollView() {
@@ -215,6 +215,7 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
         });
 
         int size = mItems.size();
+        imageWidth = transparentOverlay.getMeasuredWidth();
         for (int i = 0; i < size; i++) {
             Image image = mItems.get(i);
             RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.item_image, imageScroll, false);
@@ -224,7 +225,7 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
             params.width = imageWidth;
             view.setLayoutParams(params);
             imageContainer.addView(view);
-            if (size >0) {
+            if (size > 1) {
                 if (i == 0) {
                     holder.leftArrow.setVisibility(View.INVISIBLE);
                     holder.rightArrow.setVisibility(View.VISIBLE);
@@ -310,23 +311,6 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder = AnnouncementEntry.ANNOUNCEMENT_CREATED_AT + " ASC";
 
@@ -389,10 +373,6 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
     }
 
     private static class ViewHolder {
