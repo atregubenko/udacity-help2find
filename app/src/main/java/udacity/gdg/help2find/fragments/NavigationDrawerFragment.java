@@ -30,17 +30,15 @@ public class NavigationDrawerFragment extends Fragment{
     private static final String TAG = NavigationDrawerFragment.class.getSimpleName();
     private static final String STATE_SELECTED_POSITION = "navigation_drawer_position";
 
-    private NavigationDrawerCallbacks mCallbacks;
+    private CategorySelectedListener mCallbacks;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
-    private View mFragmentContainerView;
+    private View mContainer;
 
-    private int mCurrentSelectedPosition = 0;
-    private boolean mFromSavedInstanceState;
-    private boolean mUserLearnedDrawer;
+    private int mSelectedPosition = 0;
     private DrawerCursorAdapter mAdapter;
 
     public NavigationDrawerFragment() {
@@ -50,14 +48,10 @@ public class NavigationDrawerFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
-//
-//        if (savedInstanceState != null) {
-//            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
-//            mFromSavedInstanceState = true;
-//        }
-//        selectItem(mCurrentSelectedPosition);
+        if (savedInstanceState != null) {
+            mSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+        }
+        selectItem(mSelectedPosition);
     }
 
     @Override
@@ -79,28 +73,26 @@ public class NavigationDrawerFragment extends Fragment{
         });
         Uri contentUri = HelpFindContract.CategoryEntry.CONTENT_URI;
         Cursor cursor = getActivity().getContentResolver().query(
-                contentUri,   // The content URI of the words table
-                null,                        // The columns to return for each row
-                null,                    // Selection criteria
-                null,                     // Selection criteria
-                null);                        // The sort order for the returned rows
+                contentUri,
+                null,
+                null,
+                null,
+                null);
         mAdapter = new DrawerCursorAdapter(getActivity(), cursor, 0);
         mDrawerListView.setAdapter(mAdapter);
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        mDrawerListView.setItemChecked(mSelectedPosition, true);
         return mDrawerListView;
     }
 
     public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mContainer);
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
-        mFragmentContainerView = getActivity().findViewById(fragmentId);
+    public void init(int fragmentId, DrawerLayout drawerLayout) {
+        mContainer = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
-//        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
@@ -125,18 +117,11 @@ public class NavigationDrawerFragment extends Fragment{
                 if (!isAdded()) {
                     return;
                 }
-                if (!mUserLearnedDrawer) {
-                    mUserLearnedDrawer = true;
-//                    SharedPreferences sp = PreferenceManager
-//                            .getDefaultSharedPreferences(getActivity());
-//                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
-                }
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                getActivity().supportInvalidateOptionsMenu();
             }
         };
-
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-            mDrawerLayout.openDrawer(mFragmentContainerView);
+        if (mSelectedPosition == 0) {
+            mDrawerLayout.openDrawer(mContainer);
         }
         mDrawerLayout.post(new Runnable() {
             @Override
@@ -148,14 +133,18 @@ public class NavigationDrawerFragment extends Fragment{
     }
 
     private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
+        mSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
         if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
+            mDrawerLayout.closeDrawer(mContainer);
         }
-        if (mCallbacks != null) {
+        categorySelected(position);
+    }
+
+    private void categorySelected(int position) {
+        if (mCallbacks != null && mAdapter != null) {
             Cursor cursor = mAdapter.getCursor();
             cursor.moveToPosition(position);
             mCallbacks.onCategorySelected(cursor.getLong(cursor.getColumnIndex(HelpFindContract.CategoryEntry.CATEGORY_ID)));
@@ -166,7 +155,7 @@ public class NavigationDrawerFragment extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
+            mCallbacks = (CategorySelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
@@ -181,7 +170,7 @@ public class NavigationDrawerFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+        outState.putInt(STATE_SELECTED_POSITION, mSelectedPosition);
     }
 
     @Override
@@ -193,7 +182,6 @@ public class NavigationDrawerFragment extends Fragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (mDrawerLayout != null && isDrawerOpen()) {
-            //inflater.inflate(R.menu.global, menu);
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
@@ -208,17 +196,13 @@ public class NavigationDrawerFragment extends Fragment{
     }
 
     private void showGlobalContextActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
     }
 
-    private ActionBar getActionBar() {
-        return ((ActionBarActivity) getActivity()).getSupportActionBar();
-    }
-
-    public static interface NavigationDrawerCallbacks {
+    public static interface CategorySelectedListener {
         void onCategorySelected(long categoryId);
     }
 }

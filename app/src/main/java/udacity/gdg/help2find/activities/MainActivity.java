@@ -1,7 +1,6 @@
 package udacity.gdg.help2find.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,7 +18,7 @@ import udacity.gdg.help2find.sync.HelpFindSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity implements CategoryListFragment.OnCategoryItemSelectedListener,
-        NavigationDrawerFragment.NavigationDrawerCallbacks {
+        NavigationDrawerFragment.CategorySelectedListener {
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private boolean mTwoPane;
     private long mCategoryId;
@@ -54,16 +53,14 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mNavigationDrawerFragment.setUp(
+        mNavigationDrawerFragment.init(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
     }
-//
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

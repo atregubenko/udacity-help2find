@@ -1,7 +1,7 @@
 package udacity.gdg.help2find.entities;
 
 /**
- * Created by nnet on 28/12/14.
+ * Created by nnet on 28.12.14.
  */
 public class Image {
     private long id;

@@ -17,7 +17,7 @@ import udacity.gdg.help2find.utils.JsonUtils;
 
 
 /**
- * Created by nnet on 28/12/14.
+ * Created by nnet on 28.12.14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Announcement implements Serializable {

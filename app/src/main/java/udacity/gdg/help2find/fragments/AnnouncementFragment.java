@@ -154,16 +154,10 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.details, menu);
-
-        // Retrieve the share menu item
         MenuItem menuItem = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
-        // If onLoadFinished happens before this, we can go ahead and set the share intent now.
         if (mAnnouncement != null) {
             mShareActionProvider.setShareIntent(createShareIntent());
         }
@@ -198,7 +192,6 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
         imageScroll.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //If the user swipes
                 if (mGestureDetector.onTouchEvent(event)) {
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
