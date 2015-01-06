@@ -30,6 +30,9 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
         HelpFindSyncAdapter.initializeSyncAdapter(this);
         HelpFindSyncAdapter.syncImmediately(this);
 
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
         if (findViewById(R.id.fragment_category) != null) {
             mTwoPane = true;
             getSupportFragmentManager().beginTransaction()
@@ -44,12 +47,7 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
                 HelpFindSyncAdapter.syncImmediately(this);
             }
         }
-
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
         mNavigationDrawerFragment.init(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
     @Override
@@ -60,13 +58,6 @@ public class MainActivity extends ActionBarActivity implements CategoryListFragm
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
         return super.onOptionsItemSelected(item);
     }
 

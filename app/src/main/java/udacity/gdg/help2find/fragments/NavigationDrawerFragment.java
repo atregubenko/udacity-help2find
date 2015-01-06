@@ -28,17 +28,16 @@ import udacity.gdg.help2find.database.HelpFindContract;
  */
 public class NavigationDrawerFragment extends Fragment{
     private static final String TAG = NavigationDrawerFragment.class.getSimpleName();
-    private static final String STATE_SELECTED_POSITION = "navigation_drawer_position";
+    private static final String CURRENT_POSITION = "current_position";
+    private static final String NEED_TO_OPEN_DRAWER = "need_to_open_drawer";
 
     private CategorySelectedListener mCallbacks;
-
     private ActionBarDrawerToggle mDrawerToggle;
-
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private View mContainer;
-
     private int mSelectedPosition = 1;
+    private boolean mNeedToOpenDrawer = true;
     private DrawerCursorAdapter mAdapter;
 
     public NavigationDrawerFragment() {
@@ -49,7 +48,8 @@ public class NavigationDrawerFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            mSelectedPosition = savedInstanceState.getInt(CURRENT_POSITION);
+            mNeedToOpenDrawer = savedInstanceState.getBoolean(NEED_TO_OPEN_DRAWER);
         }
         selectItem(mSelectedPosition);
     }
@@ -120,12 +120,13 @@ public class NavigationDrawerFragment extends Fragment{
                 getActivity().supportInvalidateOptionsMenu();
             }
         };
-        if (mSelectedPosition != -1) {
-            selectItem(mSelectedPosition);
-        } else {
-            mDrawerLayout.openDrawer(mContainer);
-        }
-        mDrawerLayout.post(new Runnable() {
+            if (mNeedToOpenDrawer) {
+                mDrawerLayout.openDrawer(mContainer);
+                mNeedToOpenDrawer = false;
+            } else if (mSelectedPosition > 0) {
+                selectItem(mSelectedPosition);
+            }
+            mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
                 mDrawerToggle.syncState();
@@ -174,7 +175,8 @@ public class NavigationDrawerFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STATE_SELECTED_POSITION, mSelectedPosition);
+        outState.putInt(CURRENT_POSITION, mSelectedPosition);
+        outState.putBoolean(NEED_TO_OPEN_DRAWER, mNeedToOpenDrawer);
     }
 
     @Override
