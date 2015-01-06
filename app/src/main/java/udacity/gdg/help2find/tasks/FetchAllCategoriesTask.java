@@ -2,6 +2,7 @@ package udacity.gdg.help2find.tasks;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Vector;
 
 import udacity.gdg.help2find.activities.SplashActivity;
+import udacity.gdg.help2find.database.HelpFindContract;
 import udacity.gdg.help2find.database.HelpFindContract.CategoryEntry;
 import udacity.gdg.help2find.entities.Category;
 import udacity.gdg.help2find.utils.JsonUtils;
@@ -33,6 +35,7 @@ import udacity.gdg.help2find.utils.JsonUtils;
 public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
 
     private static final String ALL_CATEGORIES_URL = "http://helpme2findit.herokuapp.com:80/api/categories.json";
+    private static final String TAG = FetchAllCategoriesTask.class.getSimpleName();
     private final String LOG_TAG = FetchAllCategoriesTask.class.getSimpleName();
     private final Context mContext;
     private final SplashActivity mActivity;
@@ -114,7 +117,7 @@ public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
                 e.printStackTrace();
             }
         }
-        Vector<ContentValues> announcementVector = new Vector<ContentValues>(categories.size());
+        Vector<ContentValues> categoryVector = new Vector<ContentValues>(categories.size());
 
         for(Category category : categories) {
             ContentValues values = new ContentValues();
@@ -124,9 +127,22 @@ public class FetchAllCategoriesTask extends AsyncTask<String, Void, Void> {
             values.put(CategoryEntry.CATEGORY_DESCRIPTION, category.getDescription());
             values.put(CategoryEntry.CATEGORY_PHOTO, category.getPhoto());
 
-            announcementVector.add(values);
+            Cursor categoryIdCursor = mContext.getContentResolver().query(
+                    CategoryEntry.CONTENT_URI,
+                    new String[]{CategoryEntry._ID},
+                    CategoryEntry._ID + " = ?",
+                    new String[]{String.valueOf(category.getId())},
+                    null);
+
+            if (categoryIdCursor.moveToFirst()) {
+                int categoryIdIndex = categoryIdCursor.getColumnIndex(CategoryEntry._ID);
+                long categoryId = categoryIdCursor.getLong(categoryIdIndex);
+                Log.d(TAG, "Category with id = " + categoryId + "already exists");
+            } else {
+                categoryVector.add(values);
+            }
         }
-        saveAnnouncements(announcementVector);
+        saveAnnouncements(categoryVector);
     }
 
     private void saveAnnouncements(Vector<ContentValues> announcementVector) {

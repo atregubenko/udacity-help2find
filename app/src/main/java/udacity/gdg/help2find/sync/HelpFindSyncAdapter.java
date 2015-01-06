@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,7 @@ import udacity.gdg.help2find.utils.JsonUtils;
  * Created by nnet on 05.01.15.
  */
 public class HelpFindSyncAdapter extends AbstractThreadedSyncAdapter {
+    private static final String TAG = HelpFindSyncAdapter.class.getSimpleName();
     public final String LOG_TAG = HelpFindSyncAdapter.class.getSimpleName();
     public static final int SYNC_INTERVAL = 60 * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
@@ -139,12 +141,25 @@ public class HelpFindSyncAdapter extends AbstractThreadedSyncAdapter {
             values.put(HelpFindContract.AnnouncementEntry.ANNOUNCEMENT_UPDATED_AT, HelpFindContract.getDbDateString(new Date(announcement.getUpdatedAt() * 1000L)));
             values.put(HelpFindContract.AnnouncementEntry.ANNOUNCEMENT_DATE, HelpFindContract.getDbDateString(new Date(announcement.getDate() * 1000L)));
 
+            Cursor idCursor = getContext().getContentResolver().query(
+                    HelpFindContract.AnnouncementEntry.CONTENT_URI,
+                    new String[]{HelpFindContract.AnnouncementEntry._ID},
+                    HelpFindContract.AnnouncementEntry._ID + " = ?",
+                    new String[]{String.valueOf(announcement.getId())},
+                    null);
 
-            for (Image image : announcement.getImages()) {
-                imageContentValues.add(addImage(announcement.getId(), image));
+            if (idCursor.moveToFirst()) {
+                int idIndex = idCursor.getColumnIndex(HelpFindContract.AnnouncementEntry._ID);
+                long announcementId = idCursor.getLong(idIndex);
+                Log.d(TAG, "Announcement with id = " + announcementId + "already exists");
+            } else {
+
+                for (Image image : announcement.getImages()) {
+                    imageContentValues.add(addImage(announcement.getId(), image));
+                }
+
+                announcementVector.add(values);
             }
-
-            announcementVector.add(values);
         }
         saveAnnouncements(announcementVector);
         saveImages(imageContentValues);

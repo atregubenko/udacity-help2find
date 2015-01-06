@@ -2,6 +2,7 @@ package udacity.gdg.help2find.tasks;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -35,6 +36,7 @@ import udacity.gdg.help2find.utils.JsonUtils;
 public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Void> {
 
     private static final String ANNOUNCEMENTS_BY_CATEGORY_URL = "http://helpme2findit.herokuapp.com:80/api/announcements/category/%d.json";
+    private static final String TAG = FetchAnnouncementsByCategoryTask.class.getSimpleName();
     private final String LOG_TAG = FetchAnnouncementsByCategoryTask.class.getSimpleName();
     private final Context mContext;
     private final long mCategoryId;
@@ -136,12 +138,23 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
             values.put(AnnouncementEntry.ANNOUNCEMENT_UPDATED_AT, HelpFindContract.getDbDateString(new Date(announcement.getUpdatedAt() * 1000L)));
             values.put(AnnouncementEntry.ANNOUNCEMENT_DATE, HelpFindContract.getDbDateString(new Date(announcement.getDate() * 1000L)));
 
+            Cursor idCursor = mContext.getContentResolver().query(
+                    AnnouncementEntry.CONTENT_URI,
+                    new String[]{AnnouncementEntry._ID},
+                    AnnouncementEntry._ID + " = ?",
+                    new String[]{String.valueOf(announcement.getId())},
+                    null);
 
-            for (Image image : announcement.getImages()) {
-                imageContentValues.add(addImage(announcement.getId(), image));
+            if (idCursor.moveToFirst()) {
+                int idIndex = idCursor.getColumnIndex(AnnouncementEntry._ID);
+                long announcementId = idCursor.getLong(idIndex);
+                Log.d(TAG, "Announcement with id = " + announcementId + "already exists");
+            } else {
+                for (Image image : announcement.getImages()) {
+                    imageContentValues.add(addImage(announcement.getId(), image));
+                }
+                announcementVector.add(values);
             }
-
-            announcementVector.add(values);
         }
         saveAnnouncements(announcementVector);
         saveImages(imageContentValues);
