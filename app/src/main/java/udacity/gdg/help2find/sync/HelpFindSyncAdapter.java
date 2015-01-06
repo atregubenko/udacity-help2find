@@ -53,7 +53,7 @@ public class HelpFindSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        String forecastJsonStr = null;
+        String jsonStr = null;
         try {
             Uri builtUri = Uri.parse(ALL_ANNOUNCEMENTS_URL).buildUpon()
                     .build();
@@ -79,7 +79,7 @@ public class HelpFindSyncAdapter extends AbstractThreadedSyncAdapter {
             if (buffer.length() == 0) {
                 return;
             }
-            forecastJsonStr = buffer.toString();
+            jsonStr = buffer.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             return;
@@ -97,7 +97,7 @@ public class HelpFindSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         try {
-            getDataFromJson(forecastJsonStr);
+            getDataFromJson(jsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -105,9 +105,9 @@ public class HelpFindSyncAdapter extends AbstractThreadedSyncAdapter {
         return;
     }
 
-    private void getDataFromJson(String forecastJsonStr) throws JSONException {
+    private void getDataFromJson(String jsonStr) throws JSONException {
         List<Announcement> announcements = new ArrayList<Announcement>();
-        JSONArray response = new JSONArray(forecastJsonStr);
+        JSONArray response = new JSONArray(jsonStr);
         for (int i = 0; i< response.length(); i++) {
             try {
                 JsonNode actualObj = JsonUtils.defaultMapper().readTree(String.valueOf(response.get(i)));

@@ -50,7 +50,7 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
     protected Void doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        String forecastJsonStr = null;
+        String jsonStr = null;
         try {
             Uri builtUri = Uri.parse(String.format(ANNOUNCEMENTS_BY_CATEGORY_URL, mCategoryId)).buildUpon()
                     .build();
@@ -76,7 +76,7 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
             if (buffer.length() == 0) {
                 return null;
             }
-            forecastJsonStr = buffer.toString();
+            jsonStr = buffer.toString();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             return null;
@@ -94,7 +94,7 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
         }
 
         try {
-            getDataFromJson(forecastJsonStr);
+            getDataFromJson(jsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -102,9 +102,9 @@ public class FetchAnnouncementsByCategoryTask extends AsyncTask<String, Void, Vo
         return null;
     }
 
-    private void getDataFromJson(String forecastJsonStr) throws JSONException {
+    private void getDataFromJson(String jsonStr) throws JSONException {
         List<Announcement> announcements = new ArrayList<Announcement>();
-        JSONArray response = new JSONArray(forecastJsonStr);
+        JSONArray response = new JSONArray(jsonStr);
         for (int i = 0; i< response.length(); i++) {
             try {
                 JsonNode actualObj = JsonUtils.defaultMapper().readTree(String.valueOf(response.get(i)));

@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import udacity.gdg.help2find.HelpApp;
@@ -44,6 +45,7 @@ import udacity.gdg.help2find.R;
 import udacity.gdg.help2find.activities.DetailActivity;
 import udacity.gdg.help2find.database.DBUtils;
 import udacity.gdg.help2find.database.HelpFindContract.AnnouncementEntry;
+import udacity.gdg.help2find.database.HelpFindContract.ImageEntry;
 import udacity.gdg.help2find.entities.Announcement;
 import udacity.gdg.help2find.entities.Image;
 
@@ -190,9 +192,8 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
         imageWidth = getResources().getDisplayMetrics().widthPixels - 2 * getResources().getDimensionPixelSize(R.dimen.announcement_image_horizontal_margin);
     }
 
-    private void initImageScrollView(List<Image> images) {
+    private void initImageScrollView() {
         imageContainer.removeAllViews();
-        mItems = images;
         mActiveFeature = 0;
         imageScroll.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -213,12 +214,12 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
             }
         });
 
-        int size = images.size();
+        int size = mItems.size();
         for (int i = 0; i < size; i++) {
-            Image image = images.get(i);
+            Image image = mItems.get(i);
             RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.item_image, imageScroll, false);
             ViewHolder holder = new ViewHolder(view);
-            HelpApp.displayImage("http://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/872px-Android_robot.svg.png", holder.image, R.drawable.details_placeholder);
+            HelpApp.displayImage(image.getImageUrl(), holder.image, R.drawable.details_placeholder);
             ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) view.getLayoutParams();
             params.width = imageWidth;
             view.setLayoutParams(params);
@@ -329,11 +330,11 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String sortOrder = AnnouncementEntry.ANNOUNCEMENT_CREATED_AT + " ASC";
 
-        Uri weatherForLocationUri = AnnouncementEntry.buildAnnouncementUri(mAnnouncementId);
+        Uri announcementUri = AnnouncementEntry.buildAnnouncementUri(mAnnouncementId);
 
         return new CursorLoader(
                 getActivity(),
-                weatherForLocationUri,
+                announcementUri,
                 null,
                 null,
                 null,
@@ -358,11 +359,30 @@ public class AnnouncementFragment extends Fragment  implements LoaderManager.Loa
             activity.getSupportActionBar().setTitle(mAnnouncement.getTitle());
             mDescription.setText(mAnnouncement.getDescription());
             mAddress.setText("Address: " + mAnnouncement.getAddress());
+            initImages();
+            initImageScrollView();
             initMapFragment();
             addMarker(mAnnouncement);
         }
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareIntent());
+        }
+    }
+
+    private void initImages() {
+        mItems = new ArrayList<Image>();
+        Cursor cursor = getActivity().getContentResolver().query(
+                ImageEntry.CONTENT_URI,
+                null,
+                ImageEntry.IMAGE_ANNOUNCEMENT_ID + " = ?",
+                new String[]{String.valueOf(mAnnouncement.getId())},
+                null);
+        while (cursor.moveToNext()) {
+            Image image = new Image();
+            image.setImageUrl(cursor.getString(cursor.getColumnIndex(ImageEntry.IMAGE_URL)));
+            image.setId(cursor.getLong(cursor.getColumnIndex(ImageEntry.IMAGE_ID)));
+            image.setAnnouncement(mAnnouncement);
+            mItems.add(image);
         }
     }
 
